@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1] - 2025-12-21
+
+### Changed
+- Updated documentation attribution for hackathon organizers
+- Cleaned up README formatting
+- Minor documentation improvements
+
+## [0.1.0] - 2025-12-21
 
 ### Added
 - Initial release of the SerpAPI Rust SDK
@@ -44,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Development Context
 - 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://www.eventbrite.com/e/realtime-search-ai-hackathon-hybrid-powered-by-serpapi-tickets)**
-- 🏢 **Organized by [AI Paris Thinker](https://www.meetup.com/ai-paris-thinker/)**
+- 🏢 **Organized by [AI Tinkerers Paris](https://paris.aitinkerers.org/)**
 - 🚀 **Powered by [SerpAPI](https://serpapi.com)**
 
 ### Development Team

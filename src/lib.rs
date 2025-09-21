@@ -8,8 +8,8 @@
 //! A comprehensive, production-ready Rust SDK for the [SerpAPI](https://serpapi.com) service 
 //! that provides ergonomic APIs, type safety, and async-first design.
 //! 
-//! > 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://www.eventbrite.com/e/realtime-search-ai-hackathon-hybrid-powered-by-serpapi-tickets) 
-//! > powered by SerpAPI and organized by [AI Paris Thinker](https://www.meetup.com/ai-paris-thinker/)**
+//! > 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://www.eventbrite.com/e/realtime-search-ai-hackathon-hybrid-powered-by-serpapi-tickets)
+//! > powered by SerpAPI and organized by [AI Tinkerers Paris](https://paris.aitinkerers.org/)**
 //! 
 //! ## Features
 //! 

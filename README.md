@@ -7,8 +7,8 @@
 [![Crates.io](https://img.shields.io/crates/v/serp-sdk.svg)](https://crates.io/crates/serp-sdk)
 [![Documentation](https://docs.rs/serp-sdk/badge.svg)](https://docs.rs/serp-sdk)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](#license)
-[![Build Status](https://github.com/your-org/serp-sdk/workflows/CI/badge.svg)](https://github.com/your-org/serp-sdk/actions)
-[![codecov](https://codecov.io/gh/your-org/serp-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/your-org/serp-sdk)
+[![Build Status](https://github.com/RustSandbox/SerpRS/workflows/CI/badge.svg)](https://github.com/RustSandbox/SerpRS/actions)
+[![codecov](https://codecov.io/gh/RustSandbox/SerpRS/branch/main/graph/badge.svg)](https://codecov.io/gh/RustSandbox/SerpRS)
 [![Rust Version](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
 
 </div>
@@ -17,7 +17,7 @@
 
 A comprehensive, production-ready Rust SDK for the [SerpAPI](https://serpapi.com) service that provides ergonomic APIs, type safety, and async-first design.
 
-> 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://paris.aitinkerers.org/hackathons/h_vJPzSulnsyM) powered by SerpAPI and organized by [AI Paris Thinker]([https://www.meetup.com/ai-paris-thinker/](https://paris.aitinkerers.org/))**
+> 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://paris.aitinkerers.org/hackathons/h_vJPzSulnsyM) powered by SerpAPI and organized by [AI Tinkerers Paris](https://paris.aitinkerers.org/)**
 
 ## Features
 
@@ -37,6 +37,18 @@ Add this to your `Cargo.toml`:
 [dependencies]
 serp-sdk = "0.1"
 tokio = { version = "1.0", features = ["full"] }
+```
+
+### Documentation
+
+- **[Crates.io](https://crates.io/crates/serp-sdk)** - Official package registry
+- **[Docs.rs](https://docs.rs/serp-sdk)** - Auto-generated API documentation
+- **[GitHub Repository](https://github.com/RustSandbox/SerpRS)** - Source code and examples
+
+To generate local documentation:
+
+```bash
+cargo doc --all-features --no-deps --open
 ```
 
 ### Basic Usage
@@ -301,11 +313,10 @@ This project is supported by our generous sponsors:
 
 ## Acknowledgments
 
-- **[Realtime Search AI Hackathon](https://www.eventbrite.com/e/realtime-search-ai-hackathon-hybrid-powered-by-serpapi-tickets)** - This SDK was developed during this innovative hackathon event
-- **[AI Paris Thinker](https://www.meetup.com/ai-paris-thinker/)** - For organizing the hackathon and fostering AI innovation
+- **[AI Tinkerers Paris](https://paris.aitinkerers.org/)** - For organizing the hackathon and fostering AI innovation
 - **[SerpAPI](https://serpapi.com)** - For providing the excellent search API service and sponsoring the hackathon
 - The **Rust community** for exceptional async and HTTP libraries
-- All **[contributors](https://github.com/your-org/serp-sdk/graphs/contributors)** who help improve this project
+- All **[contributors](https://github.com/RustSandbox/SerpRS/graphs/contributors)** who help improve this project
 
 ## Team
 
@@ -327,27 +338,4 @@ This SDK is evolving into a comprehensive AI-powered search infrastructure throu
 
 2. **🗄️ PostgreSQL Integration (Q2 2026)**: Add persistent caching, search analytics, and query optimization with database-backed storage for enterprise-scale deployments.
 
-3. **🌐 MCP Server (Q3 2026)**: Expose search capabilities to AI assistants like Claude and ChatGPT through the Model Context Protocol, enabling multi-assistant collaboration.
-
-### Phase 1: Rig Rust Integration 🎯
-Integration with [Rig](https://github.com/0xPlaygrounds/rig), the Rust library for building LLM-powered applications:
-- **LLM-Powered Search**: Combine SerpAPI search results with Rig's LLM capabilities for intelligent search summarization
-- **RAG Pipeline**: Use SerpAPI as a real-time data source for Retrieval-Augmented Generation
-- **Agent Tools**: Expose SerpAPI search as a tool for Rig agents to use in autonomous workflows
-- **Semantic Search**: Enhance search queries with embeddings and semantic understanding
-
-### Phase 2: PostgreSQL Integration 🗄️
-Database persistence and caching layer:
-- **Search Result Caching**: Store search results in PostgreSQL with configurable TTL
-- **Query History**: Track and analyze search patterns over time
-- **Result Deduplication**: Intelligent deduplication of search results across queries
-- **Full-Text Search**: Combine SerpAPI results with PostgreSQL's full-text search capabilities
-- **Analytics Dashboard**: Query performance metrics and usage analytics
-
-### Phase 3: MCP Server Implementation 🌐
-Model Context Protocol server for AI assistants:
-- **MCP Tools**: Expose SerpAPI search as MCP tools for AI assistants
-- **Resource Providers**: Stream search results as MCP resources
-- **Context Management**: Intelligent context window management for search results
-- **Multi-Assistant Support**: Allow multiple AI assistants to share search context
-- **Rate Limiting**: Built-in rate limiting and quota management per assistant
+3. **🌐 MCP Server (Q3 2026)**: Expose search capabilities to AI assistants through the Model Context Protocol, enabling multi-assistant collaboration.

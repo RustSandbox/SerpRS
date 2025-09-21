@@ -14,11 +14,13 @@ The SDK roadmap is divided into three strategic phases, each building upon the p
 **Status**: Planning
 
 ### Goals
+
 Transform the SerpAPI SDK into an intelligent search layer for LLM-powered applications using [Rig](https://github.com/0xPlaygrounds/rig).
 
 ### Features
 
 #### 1.1 LLM-Powered Search Enhancement
+
 ```rust
 // Example: Intelligent search with summarization
 let search_agent = RigSearchAgent::builder()
@@ -34,12 +36,14 @@ let result = search_agent
 ```
 
 #### 1.2 RAG Pipeline Integration
+
 - Real-time web data retrieval for RAG applications
 - Automatic context enrichment from search results
 - Source verification and citation management
 - Dynamic knowledge base updates
 
 #### 1.3 Agent Tool Implementation
+
 ```rust
 // Example: SerpAPI as a Rig agent tool
 let agent = rig::Agent::builder()
@@ -52,12 +56,14 @@ let response = agent.run("Find recent news about Rust and create a summary").awa
 ```
 
 #### 1.4 Semantic Search Enhancement
+
 - Query expansion using embeddings
 - Intent recognition and query refinement
 - Multi-modal search (text + image understanding)
 - Relevance scoring with vector similarity
 
 ### Technical Requirements
+
 - Add `rig` as optional dependency
 - Create `rig-integration` feature flag
 - Implement Tool trait for Rig compatibility
@@ -69,11 +75,13 @@ let response = agent.run("Find recent news about Rust and create a summary").awa
 **Status**: Planned
 
 ### Goals
+
 Add persistent storage, caching, and analytics capabilities to the SDK.
 
 ### Features
 
 #### 2.1 Intelligent Caching System
+
 ```rust
 // Example: Cached search with PostgreSQL backend
 let cached_client = SerpClient::builder()
@@ -87,12 +95,14 @@ let results = cached_client.search(query).await?;
 ```
 
 #### 2.2 Search History & Analytics
+
 - Query pattern analysis
 - Popular search trends
 - Performance metrics tracking
 - Cost optimization insights
 
 #### 2.3 Database Schema
+
 ```sql
 -- Core tables
 CREATE TABLE search_queries (
@@ -123,11 +133,13 @@ CREATE TABLE search_metrics (
 ```
 
 #### 2.4 Result Deduplication
+
 - Content fingerprinting
 - Fuzzy matching for similar results
 - Cross-query result correlation
 
 ### Technical Requirements
+
 - Add `sqlx` and `tokio-postgres` dependencies
 - Create migration system
 - Implement connection pooling
@@ -139,11 +151,13 @@ CREATE TABLE search_metrics (
 **Status**: Planned
 
 ### Goals
-Create a Model Context Protocol server to expose SerpAPI search capabilities to AI assistants like Claude, ChatGPT, and others.
+
+Create a Model Context Protocol server to expose SerpAPI search capabilities to AI assistants.
 
 ### Features
 
 #### 3.1 MCP Tools Definition
+
 ```json
 {
   "tools": [
@@ -170,6 +184,7 @@ Create a Model Context Protocol server to expose SerpAPI search capabilities to 
 ```
 
 #### 3.2 Resource Streaming
+
 ```rust
 // Example: Streaming search results to AI assistants
 let mcp_server = McpServer::builder()
@@ -186,29 +201,33 @@ mcp_server.stream_search_results(query)
 ```
 
 #### 3.3 Context Management
+
 - Token counting and optimization
 - Result summarization for context limits
 - Intelligent result filtering
 - Conversation history tracking
 
 #### 3.4 Multi-Assistant Architecture
+
 ```rust
 // Example: Multiple AI assistants sharing search context
 let shared_context = McpSharedContext::new();
 
-let claude_session = mcp_server.create_session("claude", shared_context.clone());
-let gpt_session = mcp_server.create_session("gpt-4", shared_context.clone());
+let assistant1_session = mcp_server.create_session("assistant-1", shared_context.clone());
+let assistant2_session = mcp_server.create_session("assistant-2", shared_context.clone());
 
 // Both assistants can access shared search results
 ```
 
 #### 3.5 Rate Limiting & Quota Management
+
 - Per-assistant rate limits
 - Credit allocation system
 - Usage monitoring and alerts
 - Automatic fallback strategies
 
 ### Technical Requirements
+
 - Implement MCP protocol specification
 - Add WebSocket/HTTP server
 - Create authentication system
@@ -217,6 +236,7 @@ let gpt_session = mcp_server.create_session("gpt-4", shared_context.clone());
 ## Implementation Strategy
 
 ### Development Principles
+
 1. **Backward Compatibility**: All new features will be optional
 2. **Feature Flags**: Each phase will have its own feature flag
 3. **Modular Design**: Clean separation between core SDK and integrations
@@ -224,6 +244,7 @@ let gpt_session = mcp_server.create_session("gpt-4", shared_context.clone());
 5. **Comprehensive Testing**: Each phase includes extensive tests
 
 ### Testing Strategy
+
 - Unit tests for all new components
 - Integration tests with mock services
 - End-to-end tests with real APIs (gated)
@@ -231,6 +252,7 @@ let gpt_session = mcp_server.create_session("gpt-4", shared_context.clone());
 - Load testing for server components
 
 ### Documentation Plan
+
 - API documentation with examples
 - Integration guides for each phase
 - Migration guides between versions
@@ -239,6 +261,7 @@ let gpt_session = mcp_server.create_session("gpt-4", shared_context.clone());
 ## Community Contribution
 
 We welcome contributions! Each phase will have:
+
 - Detailed RFC (Request for Comments)
 - Public design discussions
 - Beta testing programs
@@ -247,16 +270,19 @@ We welcome contributions! Each phase will have:
 ## Success Metrics
 
 ### Phase 1 (Rig Integration)
+
 - ✅ Zero-overhead when not using Rig features
 - ✅ Support for top 3 LLM providers
 - ✅ &lt;100ms overhead for LLM enhancement
 
 ### Phase 2 (PostgreSQL)
+
 - ✅ 90% cache hit rate for repeated queries
 - ✅ &lt;10ms cache lookup time
 - ✅ Automatic cache invalidation
 
 ### Phase 3 (MCP Server)
+
 - ✅ Support for 5+ AI assistants
 - ✅ &lt;50ms response time for tool calls
 - ✅ 99.9% uptime for production deployments
@@ -276,10 +302,5 @@ We welcome contributions! Each phase will have:
   - [Hamze Ghalebi](https://www.linkedin.com/in/hamze/)
   - [Reetika Gautam](https://www.linkedin.com/in/reetika-gautam/)
   - [Leon Carlo](https://www.linkedin.com/in/leoncarlo/)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/your-org/serp-sdk/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-org/serp-sdk/discussions)
-- 🎯 **Hackathon**: [AI Paris Thinker](https://www.meetup.com/ai-paris-thinker/)
 
 ---
-
-*This roadmap is subject to change based on community feedback and technical requirements.*
