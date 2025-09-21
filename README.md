@@ -17,7 +17,7 @@
 
 A comprehensive, production-ready Rust SDK for the [SerpAPI](https://serpapi.com) service that provides ergonomic APIs, type safety, and async-first design.
 
-> 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://www.eventbrite.com/e/realtime-search-ai-hackathon-hybrid-powered-by-serpapi-tickets) powered by SerpAPI and organized by [AI Paris Thinker](https://www.meetup.com/ai-paris-thinker/)**
+> 🏆 **Developed during the [Realtime Search AI Hackathon (Hybrid)](https://paris.aitinkerers.org/hackathons/h_vJPzSulnsyM) powered by SerpAPI and organized by [AI Paris Thinker]([https://www.meetup.com/ai-paris-thinker/](https://paris.aitinkerers.org/))**
 
 ## Features
 
@@ -276,12 +276,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under either of
-
-- Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
 - MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
-at your option.
+
 
 ## Performance
 
@@ -314,7 +311,7 @@ This project is supported by our generous sponsors:
 
 This SDK was developed by:
 
-- **[Hamze Ghalebi](https://www.linkedin.com/in/hamze/)** - Lead Developer
+- **[Hamze Ghalebi](https://www.linkedin.com/in/hamze/)** -  Developer
 - **[Reetika Gautam](https://www.linkedin.com/in/reetika-gautam/)** - Developer
 - **[Leon Carlo](https://www.linkedin.com/in/leoncarlo/)** - Developer
 
