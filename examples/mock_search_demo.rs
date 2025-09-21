@@ -1,10 +1,9 @@
+use futures::StreamExt;
+use serde_json::json;
 /// Demo that simulates real search functionality with mock responses
 /// This shows what the SDK would look like in actual usage
-
-use serp_sdk::{SerpClient, SearchQuery, StreamConfig, SerpError};
-use futures::StreamExt;
+use serp_sdk::{SearchQuery, SerpClient, SerpError, StreamConfig};
 use std::time::Duration;
-use serde_json::json;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -75,7 +74,9 @@ async fn demonstrate_basic_search(client: &SerpClient) -> Result<(), Box<dyn std
     Ok(())
 }
 
-async fn demonstrate_specialized_searches(_client: &SerpClient) -> Result<(), Box<dyn std::error::Error>> {
+async fn demonstrate_specialized_searches(
+    _client: &SerpClient,
+) -> Result<(), Box<dyn std::error::Error>> {
     println!("3️⃣  Specialized Search Types:");
     println!("-----------------------------");
 
@@ -84,7 +85,7 @@ async fn demonstrate_specialized_searches(_client: &SerpClient) -> Result<(), Bo
     println!("🖼️  Image Search: 'rust programming logo'");
     println!("   Search Type: images (tbm=isch)");
 
-    // Video search  
+    // Video search
     let _video_query = SearchQuery::new("rust tutorial").videos();
     println!("🎥 Video Search: 'rust tutorial'");
     println!("   Search Type: videos (tbm=vid)");
@@ -100,8 +101,7 @@ async fn demonstrate_specialized_searches(_client: &SerpClient) -> Result<(), Bo
     println!("   Search Type: shopping (tbm=shop)");
 
     // Local search
-    let _local_query = SearchQuery::new("rust meetup")
-        .location("San Francisco, CA");
+    let _local_query = SearchQuery::new("rust meetup").location("San Francisco, CA");
     println!("📍 Local Search: 'rust meetup' in San Francisco, CA");
     println!("   Location: San Francisco, CA");
 
@@ -110,7 +110,9 @@ async fn demonstrate_specialized_searches(_client: &SerpClient) -> Result<(), Bo
     Ok(())
 }
 
-async fn demonstrate_streaming_search(_client: &SerpClient) -> Result<(), Box<dyn std::error::Error>> {
+async fn demonstrate_streaming_search(
+    _client: &SerpClient,
+) -> Result<(), Box<dyn std::error::Error>> {
     println!("4️⃣  Streaming Search (Pagination):");
     println!("----------------------------------");
 
@@ -122,12 +124,19 @@ async fn demonstrate_streaming_search(_client: &SerpClient) -> Result<(), Box<dy
     println!("🌊 Stream Configuration:");
     println!("   Page size: {}", stream_config.page_size);
     println!("   Max pages: {}", stream_config.max_pages);
-    println!("   Delay between requests: {:?}", stream_config.delay_between_requests);
+    println!(
+        "   Delay between requests: {:?}",
+        stream_config.delay_between_requests
+    );
 
     // Simulate what streaming would look like
     println!("\n📄 Simulated Streaming Results:");
     for page in 1..=3 {
-        println!("   📄 Page {}: Would fetch 10 results (offset: {})", page, (page - 1) * 10);
+        println!(
+            "   📄 Page {}: Would fetch 10 results (offset: {})",
+            page,
+            (page - 1) * 10
+        );
         if page < 3 {
             println!("      ⏱️  Waiting 500ms before next request...");
         }
@@ -138,7 +147,9 @@ async fn demonstrate_streaming_search(_client: &SerpClient) -> Result<(), Box<dy
     Ok(())
 }
 
-async fn demonstrate_error_handling(_client: &SerpClient) -> Result<(), Box<dyn std::error::Error>> {
+async fn demonstrate_error_handling(
+    _client: &SerpClient,
+) -> Result<(), Box<dyn std::error::Error>> {
     println!("5️⃣  Error Handling Examples:");
     println!("----------------------------");
 
@@ -150,7 +161,7 @@ async fn demonstrate_error_handling(_client: &SerpClient) -> Result<(), Box<dyn 
     }
 
     match SearchQuery::new("test").limit(0) {
-        Ok(_) => println!("   ❌ Should have failed"), 
+        Ok(_) => println!("   ❌ Should have failed"),
         Err(e) => println!("   ✅ Caught zero limit: {}", e),
     }
 

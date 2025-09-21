@@ -1,29 +1,31 @@
+#![allow(missing_docs)]
+
 use serde::Deserialize;
 use std::collections::HashMap;
 
 /// Complete search results from SerpAPI.
-/// 
+///
 /// This is the main response structure returned by search operations.
 /// It contains all the different types of results that Google can return,
 /// including organic results, ads, knowledge panels, and more.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use serp_sdk::{SerpClient, SearchQuery};
-/// 
+///
 /// # #[tokio::main]
 /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// # let client = SerpClient::builder().api_key("test").build()?;
 /// let results = client.search(SearchQuery::new("rust programming")).await?;
-/// 
+///
 /// // Process organic results
 /// if let Some(organic) = results.organic_results {
 ///     for result in organic {
 ///         println!("{}: {}", result.title, result.link);
 ///     }
 /// }
-/// 
+///
 /// // Check for knowledge graph
 /// if let Some(kg) = results.knowledge_graph {
 ///     println!("Knowledge panel: {}", kg.title);
@@ -63,7 +65,7 @@ pub struct SearchResults {
 }
 
 /// Metadata about the search request execution.
-/// 
+///
 /// Contains information about how the search was processed, including
 /// timing data and unique identifiers for the request.
 #[derive(Debug, Deserialize, Clone)]

@@ -19,7 +19,7 @@ fn benchmark_query_builder(c: &mut Criterion) {
                     .language("en")
                     .country("us")
                     .limit(10)
-                    .unwrap()
+                    .unwrap(),
             )
         })
     });
@@ -36,7 +36,7 @@ fn benchmark_query_builder(c: &mut Criterion) {
                     .limit(50)
                     .unwrap()
                     .offset(10)
-                    .location("San Francisco, CA")
+                    .location("San Francisco, CA"),
             )
         })
     });
@@ -48,7 +48,7 @@ fn benchmark_query_builder(c: &mut Criterion) {
                     .videos()
                     .language("en")
                     .limit(20)
-                    .unwrap()
+                    .unwrap(),
             )
         })
     });
@@ -56,9 +56,7 @@ fn benchmark_query_builder(c: &mut Criterion) {
 
 fn benchmark_client_creation(c: &mut Criterion) {
     c.bench_function("client_builder", |b| {
-        b.iter(|| {
-            black_box(create_mock_client())
-        })
+        b.iter(|| black_box(create_mock_client()))
     });
 
     c.bench_function("client_builder_with_options", |b| {
@@ -70,7 +68,7 @@ fn benchmark_client_creation(c: &mut Criterion) {
                     .user_agent("benchmark-client")
                     .base_url("https://serpapi.com")
                     .build()
-                    .expect("Failed to create client")
+                    .expect("Failed to create client"),
             )
         })
     });
@@ -111,7 +109,7 @@ fn benchmark_streaming_config(c: &mut Criterion) {
                     .page_size(10)
                     .unwrap()
                     .max_pages(5)
-                    .delay(Duration::from_millis(100))
+                    .delay(Duration::from_millis(100)),
             )
         })
     });
@@ -125,10 +123,7 @@ criterion_group!(
 );
 
 #[cfg(feature = "streaming")]
-criterion_group!(
-    streaming_benches,
-    benchmark_streaming_config
-);
+criterion_group!(streaming_benches, benchmark_streaming_config);
 
 #[cfg(feature = "streaming")]
 criterion_main!(benches, streaming_benches);

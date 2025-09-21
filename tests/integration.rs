@@ -1,4 +1,4 @@
-use serp_sdk::{SerpClient, SearchQuery, SerpError};
+use serp_sdk::{SearchQuery, SerpClient, SerpError};
 use std::time::Duration;
 
 #[tokio::test]
@@ -17,7 +17,7 @@ async fn test_client_builder() {
 async fn test_missing_api_key() {
     // Ensure environment variable is not set
     std::env::remove_var("SERP_API_KEY");
-    
+
     let result = SerpClient::builder().build();
     assert!(matches!(result, Err(SerpError::MissingApiKey)));
 }

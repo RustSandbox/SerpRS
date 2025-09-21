@@ -1,45 +1,46 @@
-use serde::Serialize;
 use crate::error::{SerpError, SerpResult};
+use serde::Serialize;
 
 /// Fluent interface for building search queries
 #[derive(Debug, Clone, Serialize)]
 pub struct SearchQuery {
     #[serde(rename = "q")]
     query: String,
-    
+
     #[serde(rename = "hl", skip_serializing_if = "Option::is_none")]
     language: Option<String>,
-    
+
     #[serde(rename = "gl", skip_serializing_if = "Option::is_none")]
     geolocation: Option<String>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     google_domain: Option<String>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     num: Option<u32>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     start: Option<u32>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     device: Option<String>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     safe: Option<String>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     tbm: Option<String>,
-    
+
     #[serde(skip_serializing_if = "Option::is_none")]
     location: Option<String>,
-    
+
     #[serde(skip)]
     api_key: String,
 }
 
 impl SearchQuery {
     /// Create a new search query builder
+    #[allow(clippy::new_ret_no_self)]
     pub fn new(query: impl Into<String>) -> SearchQueryBuilder {
         SearchQueryBuilder::new(query)
     }
@@ -50,6 +51,7 @@ impl SearchQuery {
     }
 
     /// Get the API key
+    #[allow(dead_code)]
     pub(crate) fn api_key(&self) -> &str {
         &self.api_key
     }
@@ -84,7 +86,7 @@ impl SearchQueryBuilder {
                 tbm: None,
                 location: None,
                 api_key: String::new(),
-            }
+            },
         }
     }
 
@@ -113,7 +115,7 @@ impl SearchQueryBuilder {
     pub fn limit(mut self, num: u32) -> SerpResult<Self> {
         if num == 0 || num > 100 {
             return Err(SerpError::InvalidParameter(
-                "limit must be between 1 and 100".to_string()
+                "limit must be between 1 and 100".to_string(),
             ));
         }
         self.inner.num = Some(num);
@@ -217,7 +219,7 @@ mod tests {
         let query = SearchQuery::new("cats")
             .images()
             .build("test-key".to_string());
-        
+
         assert_eq!(query.tbm.as_ref().unwrap(), "isch");
     }
 }

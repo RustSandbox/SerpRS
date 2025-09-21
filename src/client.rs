@@ -1,5 +1,5 @@
-use std::time::Duration;
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
+use std::time::Duration;
 use tracing::{debug, info, warn};
 
 use crate::{
@@ -10,28 +10,28 @@ use crate::{
 };
 
 /// Main client for SerpAPI interactions.
-/// 
+///
 /// This is the primary interface for making search requests to the SerpAPI service.
 /// It handles authentication, request construction, response parsing, and retry logic.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use serp_sdk::{SerpClient, SearchQuery};
-/// 
+///
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let client = SerpClient::builder()
 ///         .api_key("your-api-key")
 ///         .build()?;
-/// 
+///
 ///     let results = client.search(
 ///         SearchQuery::new("rust programming")
 ///             .language("en")
 ///             .limit(10)?
 ///     ).await?;
-/// 
-///     println!("Found {} results", 
+///
+///     println!("Found {} results",
 ///         results.organic_results.as_ref().map_or(0, |r| r.len()));
 ///     Ok(())
 /// }
@@ -44,16 +44,16 @@ pub struct SerpClient {
 }
 
 /// Builder for constructing [`SerpClient`] with ergonomic API.
-/// 
+///
 /// This builder provides a fluent interface for configuring the SerpAPI client
 /// with various options like timeouts, retry policies, and custom headers.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust
 /// use serp_sdk::{SerpClient, RetryPolicy};
 /// use std::time::Duration;
-/// 
+///
 /// let client = SerpClient::builder()
 ///     .api_key("your-api-key")
 ///     .timeout(Duration::from_secs(30))
@@ -121,12 +121,18 @@ impl SerpClientBuilder {
     }
 
     /// Add a default header to all requests
-    pub fn default_header(mut self, name: impl AsRef<str>, value: impl AsRef<str>) -> SerpResult<Self> {
-        let header_name: reqwest::header::HeaderName = name.as_ref().parse()
-            .map_err(|_| SerpError::InvalidParameter(format!("Invalid header name: {}", name.as_ref())))?;
-        let header_value = HeaderValue::from_str(value.as_ref())
-            .map_err(|_| SerpError::InvalidParameter(format!("Invalid header value: {}", value.as_ref())))?;
-        
+    pub fn default_header(
+        mut self,
+        name: impl AsRef<str>,
+        value: impl AsRef<str>,
+    ) -> SerpResult<Self> {
+        let header_name: reqwest::header::HeaderName = name.as_ref().parse().map_err(|_| {
+            SerpError::InvalidParameter(format!("Invalid header name: {}", name.as_ref()))
+        })?;
+        let header_value = HeaderValue::from_str(value.as_ref()).map_err(|_| {
+            SerpError::InvalidParameter(format!("Invalid header value: {}", value.as_ref()))
+        })?;
+
         self.default_headers.insert(header_name, header_value);
         Ok(self)
     }
@@ -134,13 +140,16 @@ impl SerpClientBuilder {
     /// Build the SerpClient
     pub fn build(self) -> SerpResult<SerpClient> {
         // Try to get API key from builder, then environment
-        let api_key = self.api_key
+        let api_key = self
+            .api_key
             .or_else(|| std::env::var("SERP_API_KEY").ok())
             .ok_or(SerpError::MissingApiKey)?;
 
         // Validate API key format (basic check)
         if api_key.trim().is_empty() {
-            return Err(SerpError::InvalidParameter("API key cannot be empty".to_string()));
+            return Err(SerpError::InvalidParameter(
+                "API key cannot be empty".to_string(),
+            ));
         }
 
         // Build HTTP client with configured settings
@@ -163,7 +172,9 @@ impl SerpClientBuilder {
 
         Ok(SerpClient {
             api_key,
-            base_url: self.base_url.unwrap_or_else(|| "https://serpapi.com".to_string()),
+            base_url: self
+                .base_url
+                .unwrap_or_else(|| "https://serpapi.com".to_string()),
             client,
             retry_policy: self.retry_policy,
         })
@@ -194,7 +205,7 @@ impl SerpClient {
 
         loop {
             debug!("Executing search request (attempt {})", retries + 1);
-            
+
             match self.execute_request(&query).await {
                 Ok(results) => {
                     info!("Search completed successfully");
@@ -223,10 +234,11 @@ impl SerpClient {
     async fn execute_request(&self, query: &SearchQuery) -> SerpResult<SearchResults> {
         let query_string = query.to_query_string()?;
         let url = format!("{}/search?{}", self.base_url, query_string);
-        
+
         debug!("Making request to: {}", url.replace(&self.api_key, "***"));
 
-        let response = self.client
+        let response = self
+            .client
             .get(&url)
             .send()
             .await
@@ -257,8 +269,7 @@ impl SerpClient {
         }
 
         // Parse successful response
-        let response_text = response.text().await
-            .map_err(SerpError::RequestFailed)?;
+        let response_text = response.text().await.map_err(SerpError::RequestFailed)?;
 
         serde_json::from_str::<SearchResults>(&response_text)
             .map_err(|e| SerpError::InvalidResponse(format!("JSON parse error: {}", e)))
@@ -269,9 +280,7 @@ impl SerpClient {
         match error {
             SerpError::RequestFailed(reqwest_err) => {
                 // Retry on network errors, timeouts, etc.
-                reqwest_err.is_timeout() || 
-                reqwest_err.is_connect() ||
-                reqwest_err.is_request()
+                reqwest_err.is_timeout() || reqwest_err.is_connect() || reqwest_err.is_request()
             }
             SerpError::ApiError { code, .. } => {
                 // Retry on server errors (5xx)
@@ -285,9 +294,10 @@ impl SerpClient {
     /// Get the configured API key (masked for logging)
     pub fn api_key_masked(&self) -> String {
         if self.api_key.len() > 8 {
-            format!("{}***{}", 
-                &self.api_key[..4], 
-                &self.api_key[self.api_key.len()-4..]
+            format!(
+                "{}***{}",
+                &self.api_key[..4],
+                &self.api_key[self.api_key.len() - 4..]
             )
         } else {
             "***".to_string()
@@ -320,7 +330,7 @@ mod tests {
     fn test_missing_api_key() {
         // Clear any environment variable
         std::env::remove_var("SERP_API_KEY");
-        
+
         let result = SerpClient::builder().build();
         assert!(matches!(result, Err(SerpError::MissingApiKey)));
     }

@@ -1,5 +1,5 @@
 use futures::StreamExt;
-use serp_sdk::{SerpClient, SearchQuery, StreamConfig};
+use serp_sdk::{SearchQuery, SerpClient, StreamConfig};
 use std::env;
 
 #[tokio::main]
@@ -8,14 +8,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
     // Get API key from environment or command line
-    let api_key = env::args().nth(1)
+    let api_key = env::args()
+        .nth(1)
         .or_else(|| env::var("SERP_API_KEY").ok())
         .expect("Please provide API key as argument or set SERP_API_KEY environment variable");
 
     // Initialize client
-    let client = SerpClient::builder()
-        .api_key(api_key)
-        .build()?;
+    let client = SerpClient::builder().api_key(api_key).build()?;
 
     println!("🌊 Streaming search results for 'Rust tutorials'...\n");
 
@@ -30,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         SearchQuery::new("Rust tutorials")
             .language("en")
             .country("us"),
-        stream_config
+        stream_config,
     );
 
     let mut page_number = 1;
@@ -41,17 +40,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         match result {
             Ok(page) => {
                 println!("📄 Page {} Results:", page_number);
-                println!("   ⏱️  Time taken: {:.2}s", page.search_metadata.total_time_taken);
-                
+                println!(
+                    "   ⏱️  Time taken: {:.2}s",
+                    page.search_metadata.total_time_taken
+                );
+
                 if let Some(organic) = page.organic_results {
                     println!("   📊 Results on this page: {}", organic.len());
                     total_results += organic.len();
-                    
+
                     for (i, result) in organic.iter().enumerate() {
                         let global_position = (page_number - 1) * 5 + i + 1;
                         println!("   {}. {}", global_position, result.title);
                         println!("      🔗 {}", result.link);
-                        
+
                         if let Some(snippet) = &result.snippet {
                             let truncated = if snippet.len() > 100 {
                                 format!("{}...", &snippet[..100])
@@ -64,7 +66,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 } else {
                     println!("   ❌ No organic results on this page");
                 }
-                
+
                 println!();
                 page_number += 1;
             }
@@ -83,7 +85,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut individual_stream = client.organic_results_stream(
         SearchQuery::new("Rust async programming"),
-        StreamConfig::new().page_size(3)?.max_pages(2)
+        StreamConfig::new().page_size(3)?.max_pages(2),
     );
 
     let mut count = 0;
@@ -114,12 +116,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         StreamConfig::new().page_size(10)?.max_pages(5),
         |page| {
             // Stop if we find a result from rust-lang.org
-            page.organic_results
-                .as_ref()
-                .map_or(false, |results| {
-                    results.iter().any(|r| r.link.contains("rust-lang.org"))
-                })
-        }
+            page.organic_results.as_ref().map_or(false, |results| {
+                results.iter().any(|r| r.link.contains("rust-lang.org"))
+            })
+        },
     );
 
     let mut found_target = false;

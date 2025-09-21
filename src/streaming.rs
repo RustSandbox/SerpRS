@@ -40,7 +40,7 @@ impl StreamConfig {
     pub fn page_size(mut self, size: u32) -> SerpResult<Self> {
         if size == 0 || size > 100 {
             return Err(SerpError::InvalidParameter(
-                "page_size must be between 1 and 100".to_string()
+                "page_size must be between 1 and 100".to_string(),
             ));
         }
         self.page_size = size;
@@ -62,16 +62,16 @@ impl StreamConfig {
 
 impl SerpClient {
     /// Stream paginated search results
-    /// 
+    ///
     /// This method returns a stream that yields `SearchResults` for each page.
     /// It automatically handles pagination by incrementing the start parameter.
-    /// 
+    ///
     /// # Example
-    /// 
+    ///
     /// ```rust,no_run
     /// use futures::StreamExt;
     /// use serp_sdk::{SerpClient, SearchQuery, StreamConfig};
-    /// 
+    ///
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
     /// # let client = SerpClient::builder().api_key("test").build()?;
@@ -79,7 +79,7 @@ impl SerpClient {
     ///     SearchQuery::new("rust programming"),
     ///     StreamConfig::default()
     /// );
-    /// 
+    ///
     /// while let Some(result) = stream.next().await {
     ///     match result {
     ///         Ok(page) => println!("Got {} results", page.organic_results.as_ref().map_or(0, |r| r.len())),
@@ -94,29 +94,34 @@ impl SerpClient {
         base_query: SearchQueryBuilder,
         config: StreamConfig,
     ) -> Pin<Box<dyn Stream<Item = SerpResult<SearchResults>> + Send + '_>> {
-        let pages = stream::iter(0..config.max_pages)
-            .then(move |page| {
-                let query = base_query.clone()
-                    .limit(config.page_size).unwrap_or_else(|_| base_query.clone())
-                    .offset((page * config.page_size as usize) as u32);
-                
-                let delay = config.delay_between_requests;
-                
-                async move {
-                    if page > 0 && !delay.is_zero() {
-                        tokio::time::sleep(delay).await;
-                    }
-                    
-                    debug!("Fetching page {} with offset {}", page + 1, page * config.page_size as usize);
-                    self.search(query).await
+        let pages = stream::iter(0..config.max_pages).then(move |page| {
+            let query = base_query
+                .clone()
+                .limit(config.page_size)
+                .unwrap_or_else(|_| base_query.clone())
+                .offset((page * config.page_size as usize) as u32);
+
+            let delay = config.delay_between_requests;
+
+            async move {
+                if page > 0 && !delay.is_zero() {
+                    tokio::time::sleep(delay).await;
                 }
-            });
+
+                debug!(
+                    "Fetching page {} with offset {}",
+                    page + 1,
+                    page * config.page_size as usize
+                );
+                self.search(query).await
+            }
+        });
 
         Box::pin(pages)
     }
 
     /// Stream individual organic results across multiple pages
-    /// 
+    ///
     /// This method flattens the paginated results into a stream of individual
     /// organic search results, making it easier to process results one by one.
     pub fn organic_results_stream(
@@ -125,17 +130,15 @@ impl SerpClient {
         config: StreamConfig,
     ) -> Pin<Box<dyn Stream<Item = SerpResult<crate::response::OrganicResult>> + Send + '_>> {
         let search_stream = self.search_stream(base_query, config);
-        
-        let results_stream = search_stream.flat_map(|page_result| {
-            match page_result {
-                Ok(page) => {
-                    let organic_results = page.organic_results.unwrap_or_default();
-                    stream::iter(organic_results.into_iter().map(Ok)).left_stream()
-                }
-                Err(e) => {
-                    error!("Failed to fetch page: {}", e);
-                    stream::once(async move { Err(e) }).right_stream()
-                }
+
+        let results_stream = search_stream.flat_map(|page_result| match page_result {
+            Ok(page) => {
+                let organic_results = page.organic_results.unwrap_or_default();
+                stream::iter(organic_results.into_iter().map(Ok)).left_stream()
+            }
+            Err(e) => {
+                error!("Failed to fetch page: {}", e);
+                stream::once(async move { Err(e) }).right_stream()
             }
         });
 
@@ -143,7 +146,7 @@ impl SerpClient {
     }
 
     /// Stream results until a condition is met
-    /// 
+    ///
     /// This method continues fetching pages until the provided predicate returns true
     /// or an error occurs. Useful for searching until you find a specific result.
     pub fn search_until<F>(
@@ -156,7 +159,7 @@ impl SerpClient {
         F: FnMut(&SearchResults) -> bool + Send + 'static,
     {
         let search_stream = self.search_stream(base_query, config);
-        
+
         let conditional_stream = search_stream.take_while(move |result| {
             let should_continue = match result {
                 Ok(page) => !predicate(page),
@@ -169,7 +172,7 @@ impl SerpClient {
     }
 
     /// Collect all results from multiple pages into a single vector
-    /// 
+    ///
     /// This method fetches all pages and combines the organic results into
     /// a single vector. Use with caution for large result sets.
     pub async fn search_all(
@@ -198,13 +201,17 @@ mod tests {
     #[test]
     fn test_stream_config() {
         let config = StreamConfig::new()
-            .page_size(20).unwrap()
+            .page_size(20)
+            .unwrap()
             .max_pages(5)
             .delay(std::time::Duration::from_millis(500));
 
         assert_eq!(config.page_size, 20);
         assert_eq!(config.max_pages, 5);
-        assert_eq!(config.delay_between_requests, std::time::Duration::from_millis(500));
+        assert_eq!(
+            config.delay_between_requests,
+            std::time::Duration::from_millis(500)
+        );
     }
 
     #[test]

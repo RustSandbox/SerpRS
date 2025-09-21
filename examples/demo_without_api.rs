@@ -1,7 +1,6 @@
 /// Demo showcasing SerpAPI SDK functionality without requiring a real API key
 /// This demonstrates the builder patterns and type safety features
-
-use serp_sdk::{SerpClient, SearchQuery, RetryPolicy, StreamConfig};
+use serp_sdk::{RetryPolicy, SearchQuery, SerpClient, StreamConfig};
 use std::time::Duration;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -17,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .retry_policy(
             RetryPolicy::new(3)
                 .with_base_delay(Duration::from_millis(200))
-                .with_max_delay(Duration::from_secs(10))
+                .with_max_delay(Duration::from_secs(10)),
         )
         .build()?;
 
@@ -27,14 +26,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 2. Demonstrate Query Builder Pattern
     println!("2️⃣  Fluent Query Builder:");
-    
+
     let basic_query = SearchQuery::new("Rust programming language")
         .language("en")
         .country("us")
         .limit(10)?;
-    
+
     println!("✅ Basic query built successfully!");
-    
+
     let advanced_query = SearchQuery::new("site:github.com async rust")
         .language("en")
         .country("us")
@@ -43,32 +42,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .limit(50)?
         .offset(10)
         .location("San Francisco, CA");
-    
+
     println!("✅ Advanced query built successfully!");
 
     // 3. Demonstrate Specialized Query Types
     println!("\n3️⃣  Specialized Query Types:");
-    
+
     let image_query = SearchQuery::new("rust programming logo").images();
     println!("✅ Image search query created");
-    
+
     let video_query = SearchQuery::new("rust tutorial").videos();
     println!("✅ Video search query created");
-    
+
     let news_query = SearchQuery::new("rust programming").news();
     println!("✅ News search query created");
-    
+
     let shopping_query = SearchQuery::new("rust programming book").shopping();
     println!("✅ Shopping search query created");
 
     // 4. Demonstrate Stream Configuration
     println!("\n4️⃣  Streaming Configuration:");
-    
+
     let stream_config = StreamConfig::new()
         .page_size(20)?
         .max_pages(5)
         .delay(Duration::from_millis(500));
-    
+
     println!("✅ Stream config created:");
     println!("   Page size: {}", stream_config.page_size);
     println!("   Max pages: {}", stream_config.max_pages);
@@ -76,13 +75,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // 5. Demonstrate Error Handling
     println!("\n5️⃣  Error Handling:");
-    
+
     // Test limit validation
     match SearchQuery::new("test").limit(101) {
         Ok(_) => println!("❌ Should have failed"),
         Err(e) => println!("✅ Correctly caught invalid limit: {}", e),
     }
-    
+
     // Test empty API key
     match SerpClient::builder().api_key("").build() {
         Ok(_) => println!("❌ Should have failed"),

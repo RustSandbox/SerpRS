@@ -1,19 +1,19 @@
 use std::time::Duration;
 
 /// Retry policy configuration for handling transient failures.
-/// 
+///
 /// This struct configures how the SDK should retry failed requests, including
 /// the number of retries, delay between attempts, and backoff strategy.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust
 /// use serp_sdk::RetryPolicy;
 /// use std::time::Duration;
-/// 
+///
 /// // Default policy: 3 retries with exponential backoff
 /// let default_policy = RetryPolicy::default();
-/// 
+///
 /// // Custom policy: 5 retries with longer delays
 /// let custom_policy = RetryPolicy::new(5)
 ///     .with_base_delay(Duration::from_millis(500))
@@ -72,7 +72,8 @@ impl RetryPolicy {
 
     /// Calculate the backoff duration for a given retry attempt
     pub fn backoff_duration(&self, attempt: usize) -> Duration {
-        let delay = self.base_delay.as_millis() as f64 * self.backoff_multiplier.powi(attempt as i32);
+        let delay =
+            self.base_delay.as_millis() as f64 * self.backoff_multiplier.powi(attempt as i32);
         let delay_ms = delay.min(self.max_delay.as_millis() as f64) as u64;
         Duration::from_millis(delay_ms)
     }

@@ -1,8 +1,8 @@
 // MCP (Model Context Protocol) integration example
 // This demonstrates how the SerpAPI SDK could be integrated as an MCP tool
 
-use serp_sdk::{SerpClient, SearchQuery};
 use serde_json::{json, Value};
+use serp_sdk::{SearchQuery, SerpClient};
 use std::env;
 
 /// MCP tool implementation for web search
@@ -13,9 +13,7 @@ pub struct SerpSearchTool {
 impl SerpSearchTool {
     /// Create a new MCP search tool
     pub fn new(api_key: String) -> Result<Self, Box<dyn std::error::Error>> {
-        let client = SerpClient::builder()
-            .api_key(api_key)
-            .build()?;
+        let client = SerpClient::builder().api_key(api_key).build()?;
 
         Ok(Self { client })
     }
@@ -28,7 +26,7 @@ impl SerpSearchTool {
             .ok_or("Missing 'query' parameter")?;
 
         let language = params["language"].as_str();
-        let country = params["country"].as_str(); 
+        let country = params["country"].as_str();
         let limit = params["limit"].as_u64().map(|n| n as u32);
         let search_type = params["type"].as_str();
 
@@ -110,10 +108,12 @@ impl SerpSearchTool {
         if let Some(related) = results.related_searches {
             let related_json: Vec<Value> = related
                 .into_iter()
-                .map(|search| json!({
-                    "query": search.query,
-                    "link": search.link
-                }))
+                .map(|search| {
+                    json!({
+                        "query": search.query,
+                        "link": search.link
+                    })
+                })
                 .collect();
 
             mcp_results["related_searches"] = json!(related_json);
@@ -141,7 +141,7 @@ pub fn get_tool_schema() -> Value {
                     "default": "en"
                 },
                 "country": {
-                    "type": "string", 
+                    "type": "string",
                     "description": "Country for search results (e.g., 'us', 'uk', 'ca')",
                     "default": "us"
                 },
@@ -170,7 +170,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
     // Get API key
-    let api_key = env::args().nth(1)
+    let api_key = env::args()
+        .nth(1)
         .or_else(|| env::var("SERP_API_KEY").ok())
         .expect("Please provide API key as argument or set SERP_API_KEY environment variable");
 
@@ -204,7 +205,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Example of different search types
     println!("\n🖼️  Testing image search...");
-    
+
     let image_params = json!({
         "query": "rust programming logo",
         "type": "images",
