@@ -75,14 +75,14 @@ fn benchmark_client_creation(c: &mut Criterion) {
 }
 
 fn benchmark_serialization(c: &mut Criterion) {
-    let query = SearchQuery::new("test query")
+    let _query = SearchQuery::new("test query")
         .language("en")
         .country("us")
         .limit(10)
         .unwrap();
 
     // We need to create a complete query with API key for serialization
-    let client = create_mock_client();
+    let _client = create_mock_client();
     let built_query = SearchQuery::new("test query")
         .language("en")
         .country("us")

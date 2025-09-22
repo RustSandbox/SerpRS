@@ -33,11 +33,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Display metadata
     println!("✅ Search completed successfully!");
     println!("📊 Search ID: {}", results.search_metadata.id);
-    println!(
-        "⏱️  Total time: {:.2}s",
-        results.search_metadata.total_time_taken
-    );
-    println!("🌐 Google URL: {}", results.search_metadata.google_url);
+    if let Some(time) = results.search_metadata.total_time_taken {
+        println!("⏱️  Total time: {:.2}s", time);
+    }
+    if let Some(url) = &results.search_metadata.google_url {
+        println!("🌐 Google URL: {}", url);
+    }
     println!();
 
     // Display organic results

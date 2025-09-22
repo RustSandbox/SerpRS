@@ -30,7 +30,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(images) = image_results.inline_images {
         println!("📸 Found {} images:", images.len());
         for (i, image) in images.iter().enumerate() {
-            println!("{}. {}", i + 1, image.title.as_deref().unwrap_or("Untitled"));
+            println!(
+                "{}. {}",
+                i + 1,
+                image.title.as_deref().unwrap_or("Untitled")
+            );
             if let Some(source) = &image.source {
                 println!("   🔗 Source: {}", source);
             }
@@ -122,7 +126,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Try inline videos instead
         println!("🎥 Found {} inline videos:", inline_videos.len());
         for (i, video) in inline_videos.iter().enumerate() {
-            println!("{}. {}", i + 1, video.title.as_deref().unwrap_or("Untitled"));
+            println!(
+                "{}. {}",
+                i + 1,
+                video.title.as_deref().unwrap_or("Untitled")
+            );
             if let Some(channel) = &video.channel {
                 println!("   📺 Channel: {}", channel);
             }

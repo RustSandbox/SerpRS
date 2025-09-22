@@ -1,8 +1,7 @@
-use futures::StreamExt;
 use serde_json::json;
 /// Demo that simulates real search functionality with mock responses
 /// This shows what the SDK would look like in actual usage
-use serp_sdk::{SearchQuery, SerpClient, SerpError, StreamConfig};
+use serp_sdk::{SearchQuery, SerpClient, StreamConfig};
 use std::time::Duration;
 
 #[tokio::main]
@@ -36,12 +35,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn demonstrate_basic_search(client: &SerpClient) -> Result<(), Box<dyn std::error::Error>> {
+async fn demonstrate_basic_search(_client: &SerpClient) -> Result<(), Box<dyn std::error::Error>> {
     println!("2️⃣  Basic Search Queries:");
     println!("------------------------");
 
     // Simple search
-    let simple_query = SearchQuery::new("Rust programming language")
+    let _simple_query = SearchQuery::new("Rust programming language")
         .language("en")
         .country("us")
         .limit(10)?;
@@ -53,7 +52,7 @@ async fn demonstrate_basic_search(client: &SerpClient) -> Result<(), Box<dyn std
     println!("   ❌ Would make API call (simulated)");
 
     // Advanced search
-    let advanced_query = SearchQuery::new("site:github.com rust web framework")
+    let _advanced_query = SearchQuery::new("site:github.com rust web framework")
         .language("en")
         .country("us")
         .device("desktop")

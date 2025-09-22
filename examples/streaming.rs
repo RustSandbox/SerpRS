@@ -117,9 +117,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         StreamConfig::new().page_size(10)?.max_pages(5),
         |page| {
             // Stop if we find a result from rust-lang.org
-            page.organic_results.as_ref().map_or(false, |results| {
-                results.iter().any(|r| r.link.contains("rust-lang.org"))
-            })
+            page.organic_results
+                .as_ref()
+                .is_some_and(|results| results.iter().any(|r| r.link.contains("rust-lang.org")))
         },
     );
 

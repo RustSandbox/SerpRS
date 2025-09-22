@@ -107,7 +107,7 @@ impl SerpSearchTool {
         // Add related searches
         if let Some(related) = results.related_searches {
             let mut related_json: Vec<Value> = Vec::new();
-            
+
             for search in related {
                 match search {
                     serp_sdk::response::RelatedSearch::Simple { query, link, .. } => {

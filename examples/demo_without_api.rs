@@ -27,14 +27,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 2. Demonstrate Query Builder Pattern
     println!("2️⃣  Fluent Query Builder:");
 
-    let basic_query = SearchQuery::new("Rust programming language")
+    let _basic_query = SearchQuery::new("Rust programming language")
         .language("en")
         .country("us")
         .limit(10)?;
 
     println!("✅ Basic query built successfully!");
 
-    let advanced_query = SearchQuery::new("site:github.com async rust")
+    let _advanced_query = SearchQuery::new("site:github.com async rust")
         .language("en")
         .country("us")
         .device("desktop")
@@ -48,16 +48,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 3. Demonstrate Specialized Query Types
     println!("\n3️⃣  Specialized Query Types:");
 
-    let image_query = SearchQuery::new("rust programming logo").images();
+    let _image_query = SearchQuery::new("rust programming logo").images();
     println!("✅ Image search query created");
 
-    let video_query = SearchQuery::new("rust tutorial").videos();
+    let _video_query = SearchQuery::new("rust tutorial").videos();
     println!("✅ Video search query created");
 
-    let news_query = SearchQuery::new("rust programming").news();
+    let _news_query = SearchQuery::new("rust programming").news();
     println!("✅ News search query created");
 
-    let shopping_query = SearchQuery::new("rust programming book").shopping();
+    let _shopping_query = SearchQuery::new("rust programming book").shopping();
     println!("✅ Shopping search query created");
 
     // 4. Demonstrate Stream Configuration
