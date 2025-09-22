@@ -1,6 +1,6 @@
 [package]
 name = "serp-sdk"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 rust-version = "1.70"
 description = "A comprehensive, production-ready Rust SDK for SerpAPI with async support, type safety, and ergonomic APIs. Developed during the Realtime Search AI Hackathon powered by SerpAPI."
