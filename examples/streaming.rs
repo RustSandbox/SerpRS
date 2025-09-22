@@ -40,10 +40,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         match result {
             Ok(page) => {
                 println!("📄 Page {} Results:", page_number);
-                println!(
-                    "   ⏱️  Time taken: {:.2}s",
-                    page.search_metadata.total_time_taken
-                );
+                if let Some(time_taken) = page.search_metadata.total_time_taken {
+                    println!("   ⏱️  Time taken: {:.2}s", time_taken);
+                }
 
                 if let Some(organic) = page.organic_results {
                     println!("   📊 Results on this page: {}", organic.len());
@@ -95,7 +94,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 count += 1;
                 println!("{}. 📎 {}", count, organic.title);
                 println!("   🔗 {}", organic.link);
-                println!("   📍 Position: {}", organic.position);
+                if let Some(pos) = organic.position {
+                    println!("   📍 Position: {}", pos);
+                }
                 println!();
             }
             Err(e) => {

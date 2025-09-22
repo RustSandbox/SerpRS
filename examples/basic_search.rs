@@ -102,7 +102,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(related) = results.related_searches {
         println!("🔗 Related searches:");
         for search in related.iter().take(5) {
-            println!("   • {}", search.query);
+            match search {
+                serp_sdk::response::RelatedSearch::Simple { query, .. } => {
+                    println!("   • {}", query);
+                }
+                serp_sdk::response::RelatedSearch::Block { items, .. } => {
+                    for item in items.iter().take(5) {
+                        if let Some(name) = &item.name {
+                            println!("   • {}", name);
+                        }
+                    }
+                }
+            }
         }
         println!();
     }

@@ -106,15 +106,28 @@ impl SerpSearchTool {
 
         // Add related searches
         if let Some(related) = results.related_searches {
-            let related_json: Vec<Value> = related
-                .into_iter()
-                .map(|search| {
-                    json!({
-                        "query": search.query,
-                        "link": search.link
-                    })
-                })
-                .collect();
+            let mut related_json: Vec<Value> = Vec::new();
+            
+            for search in related {
+                match search {
+                    serp_sdk::response::RelatedSearch::Simple { query, link, .. } => {
+                        related_json.push(json!({
+                            "query": query,
+                            "link": link
+                        }));
+                    }
+                    serp_sdk::response::RelatedSearch::Block { items, .. } => {
+                        for item in items {
+                            if let Some(name) = item.name {
+                                related_json.push(json!({
+                                    "query": name,
+                                    "link": item.link
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
 
             mcp_results["related_searches"] = json!(related_json);
         }

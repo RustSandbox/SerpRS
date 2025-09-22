@@ -30,10 +30,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(images) = image_results.inline_images {
         println!("📸 Found {} images:", images.len());
         for (i, image) in images.iter().enumerate() {
-            println!("{}. {}", i + 1, image.title);
-            println!("   🔗 Source: {}", image.source);
-            println!("   🖼️  Thumbnail: {}", image.thumbnail);
-            println!("   📏 Original: {}", image.original);
+            println!("{}. {}", i + 1, image.title.as_deref().unwrap_or("Untitled"));
+            if let Some(source) = &image.source {
+                println!("   🔗 Source: {}", source);
+            }
+            if let Some(thumbnail) = &image.thumbnail {
+                println!("   🖼️  Thumbnail: {}", thumbnail);
+            }
+            if let Some(original) = &image.original {
+                println!("   📏 Original: {}", original);
+            }
             println!();
         }
     } else {
@@ -56,8 +62,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("📰 Found {} news articles:", news.len());
         for (i, article) in news.iter().enumerate() {
             println!("{}. {}", i + 1, article.title);
-            println!("   📅 Date: {}", article.date);
-            println!("   📰 Source: {}", article.source);
+            if let Some(date) = &article.date {
+                println!("   📅 Date: {}", date);
+            }
+            if let Some(source) = &article.source {
+                println!("   📰 Source: {}", source);
+            }
             println!("   🔗 Link: {}", article.link);
 
             if let Some(snippet) = &article.snippet {
@@ -90,12 +100,44 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("🎥 Found {} videos:", videos.len());
         for (i, video) in videos.iter().enumerate() {
             println!("{}. {}", i + 1, video.title);
-            println!("   📺 Channel: {}", video.channel);
-            println!("   ⏱️  Duration: {}", video.duration);
-            println!("   🏷️  Platform: {}", video.platform);
-            println!("   📅 Date: {}", video.date);
+            if let Some(channel) = &video.channel {
+                println!("   📺 Channel: {}", channel);
+            }
+            if let Some(duration) = &video.duration {
+                println!("   ⏱️  Duration: {}", duration);
+            }
+            if let Some(platform) = &video.platform {
+                println!("   🏷️  Platform: {}", platform);
+            }
+            if let Some(date) = &video.date {
+                println!("   📅 Date: {}", date);
+            }
             println!("   🔗 Link: {}", video.link);
-            println!("   🖼️  Thumbnail: {}", video.thumbnail);
+            if let Some(thumbnail) = &video.thumbnail {
+                println!("   🖼️  Thumbnail: {}", thumbnail);
+            }
+            println!();
+        }
+    } else if let Some(inline_videos) = video_results.inline_videos {
+        // Try inline videos instead
+        println!("🎥 Found {} inline videos:", inline_videos.len());
+        for (i, video) in inline_videos.iter().enumerate() {
+            println!("{}. {}", i + 1, video.title.as_deref().unwrap_or("Untitled"));
+            if let Some(channel) = &video.channel {
+                println!("   📺 Channel: {}", channel);
+            }
+            if let Some(duration) = &video.duration {
+                println!("   ⏱️  Duration: {}", duration);
+            }
+            if let Some(platform) = &video.platform {
+                println!("   🏷️  Platform: {}", platform);
+            }
+            if let Some(link) = &video.link {
+                println!("   🔗 Link: {}", link);
+            }
+            if let Some(thumbnail) = &video.thumbnail {
+                println!("   🖼️  Thumbnail: {}", thumbnail);
+            }
             println!();
         }
     } else {
@@ -118,7 +160,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("🛒 Found {} products:", products.len());
         for (i, product) in products.iter().enumerate() {
             println!("{}. {}", i + 1, product.title);
-            println!("   💰 Price: {}", product.price);
+            if let Some(price) = &product.price {
+                println!("   💰 Price: {}", price);
+            }
 
             if let Some(rating) = product.rating {
                 println!("   ⭐ Rating: {:.1}", rating);
@@ -128,9 +172,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("   📝 Reviews: {}", reviews);
             }
 
-            println!("   🏪 Source: {}", product.source);
-            println!("   🔗 Product Link: {}", product.product_link);
-            println!("   🖼️  Thumbnail: {}", product.thumbnail);
+            if let Some(source) = &product.source {
+                println!("   🏪 Source: {}", source);
+            }
+            if let Some(product_link) = &product.product_link {
+                println!("   🔗 Product Link: {}", product_link);
+            }
+            if let Some(thumbnail) = &product.thumbnail {
+                println!("   🖼️  Thumbnail: {}", thumbnail);
+            }
 
             if let Some(extensions) = &product.extensions {
                 println!("   🏷️  Tags: {}", extensions.join(", "));
@@ -155,39 +205,43 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
     if let Some(local) = local_results.local_results {
-        println!("📍 Found {} local places:", local.places.len());
-        for (i, place) in local.places.iter().enumerate() {
-            println!("{}. {}", i + 1, place.title);
-            println!("   📍 Address: {}", place.address);
+        if let Some(places) = &local.places {
+            println!("📍 Found {} local places:", places.len());
+            for (i, place) in places.iter().enumerate() {
+                println!("{}. {}", i + 1, place.title);
+                println!("   📍 Address: {}", place.address);
 
-            if let Some(rating) = place.rating {
-                println!("   ⭐ Rating: {:.1}", rating);
+                if let Some(rating) = place.rating {
+                    println!("   ⭐ Rating: {:.1}", rating);
+                }
+
+                if let Some(reviews) = place.reviews {
+                    println!("   📝 Reviews: {}", reviews);
+                }
+
+                if let Some(phone) = &place.phone {
+                    println!("   📞 Phone: {}", phone);
+                }
+
+                if let Some(website) = &place.website {
+                    println!("   🌐 Website: {}", website);
+                }
+
+                if let Some(hours) = &place.hours {
+                    println!("   🕒 Hours: {}", hours);
+                }
+
+                if let Some(coords) = &place.gps_coordinates {
+                    println!(
+                        "   🗺️  GPS: {:.6}, {:.6}",
+                        coords.latitude, coords.longitude
+                    );
+                }
+
+                println!();
             }
-
-            if let Some(reviews) = place.reviews {
-                println!("   📝 Reviews: {}", reviews);
-            }
-
-            if let Some(phone) = &place.phone {
-                println!("   📞 Phone: {}", phone);
-            }
-
-            if let Some(website) = &place.website {
-                println!("   🌐 Website: {}", website);
-            }
-
-            if let Some(hours) = &place.hours {
-                println!("   🕒 Hours: {}", hours);
-            }
-
-            if let Some(coords) = &place.gps_coordinates {
-                println!(
-                    "   🗺️  GPS: {:.6}, {:.6}",
-                    coords.latitude, coords.longitude
-                );
-            }
-
-            println!();
+        } else {
+            println!("❌ No local places found");
         }
     } else {
         println!("❌ No local results found");
@@ -198,42 +252,39 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let advanced_results = client
         .search(
-            SearchQuery::new("site:github.com Rust web framework")
+            SearchQuery::new("site:github.com Rust async")
                 .language("en")
                 .country("us")
                 .device("desktop")
                 .safe_search("off")
-                .limit(5)?,
+                .limit(10)?,
         )
         .await?;
 
-    println!("🔍 Advanced search completed!");
-    println!("📊 Search parameters:");
-    println!(
-        "   🌐 Language: {}",
-        advanced_results
-            .search_parameters
-            .language
-            .unwrap_or("default".to_string())
-    );
-    println!(
-        "   🗺️  Location: {}",
-        advanced_results
-            .search_parameters
-            .geolocation
-            .unwrap_or("default".to_string())
-    );
-    println!("   🔍 Query: {}", advanced_results.search_parameters.query);
+    println!("✅ Advanced search completed!");
+    println!("   🆔 Search ID: {}", advanced_results.search_metadata.id);
+    if let Some(time_taken) = advanced_results.search_metadata.total_time_taken {
+        println!("   ⏱️  Time taken: {:.2}s", time_taken);
+    }
 
     if let Some(organic) = advanced_results.organic_results {
-        println!("   📋 Results found: {}", organic.len());
-        for result in organic.iter().take(3) {
-            println!("   • {}", result.title);
-            println!("     {}", result.link);
+        println!("   📊 Found {} results", organic.len());
+
+        for (i, result) in organic.iter().take(3).enumerate() {
+            println!("\n   {}. {}", i + 1, result.title);
+            println!("      🔗 {}", result.link);
+
+            if let Some(date) = &result.date {
+                println!("      📅 {}", date);
+            }
+
+            if let Some(snippet) = &result.snippet {
+                println!("      📄 {}", snippet);
+            }
         }
     }
 
-    println!("\n✅ All specialized searches completed!");
+    println!("\n✨ All specialized searches completed successfully!");
 
     Ok(())
 }

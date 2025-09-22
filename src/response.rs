@@ -62,6 +62,14 @@ pub struct SearchResults {
     pub video_results: Option<Vec<VideoResult>>,
     /// Inline image results
     pub inline_images: Option<Vec<InlineImage>>,
+    /// Inline video results
+    pub inline_videos: Option<Vec<InlineVideo>>,
+    /// Short video results
+    pub short_videos: Option<Vec<ShortVideo>>,
+    /// Search information
+    pub search_information: Option<SearchInformation>,
+    /// SerpAPI pagination
+    pub serpapi_pagination: Option<SerpapiPagination>,
 }
 
 /// Metadata about the search request execution.
@@ -73,19 +81,21 @@ pub struct SearchMetadata {
     /// Unique identifier for this search request
     pub id: String,
     /// Status of the search request ("Success", "Error", etc.)
-    pub status: String,
+    pub status: Option<String>,
     /// API endpoint URL for this specific search
-    pub json_endpoint: String,
+    pub json_endpoint: Option<String>,
     /// Timestamp when the search was initiated
-    pub created_at: String,
+    pub created_at: Option<String>,
     /// Timestamp when the search was completed
-    pub processed_at: String,
+    pub processed_at: Option<String>,
     /// Google search URL that would produce similar results
-    pub google_url: String,
+    pub google_url: Option<String>,
     /// URL to raw HTML file (if available)
-    pub raw_html_file: String,
+    pub raw_html_file: Option<String>,
     /// Total processing time in seconds
-    pub total_time_taken: f64,
+    pub total_time_taken: Option<f64>,
+    /// Pixel position endpoint
+    pub pixel_position_endpoint: Option<String>,
 }
 
 /// Parameters used for the search
@@ -105,10 +115,10 @@ pub struct SearchParameters {
 /// Organic search result
 #[derive(Debug, Deserialize, Clone)]
 pub struct OrganicResult {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
     pub link: String,
-    pub displayed_link: String,
+    pub displayed_link: Option<String>,
     pub snippet: Option<String>,
     pub snippet_highlighted_words: Option<Vec<String>>,
     pub cached_page_link: Option<String>,
@@ -135,9 +145,9 @@ pub struct AboutThisResult {
 /// Source information
 #[derive(Debug, Deserialize, Clone)]
 pub struct Source {
-    pub description: String,
-    pub source_info_link: String,
-    pub security: String,
+    pub description: Option<String>,
+    pub source_info_link: Option<String>,
+    pub security: Option<String>,
 }
 
 /// Answer box result
@@ -169,10 +179,28 @@ pub struct KnowledgeGraph {
 
 /// Related search suggestion
 #[derive(Debug, Deserialize, Clone)]
-pub struct RelatedSearch {
-    pub query: String,
-    pub link: String,
-    pub serpapi_link: String,
+#[serde(untagged)]
+pub enum RelatedSearch {
+    Simple {
+        query: String,
+        link: Option<String>,
+        serpapi_link: Option<String>,
+    },
+    Block {
+        block_position: Option<u32>,
+        items: Vec<RelatedSearchItem>,
+    },
+}
+
+/// Related search item
+#[derive(Debug, Deserialize, Clone)]
+pub struct RelatedSearchItem {
+    pub name: Option<String>,
+    pub query: Option<String>,
+    pub link: Option<String>,
+    pub serpapi_link: Option<String>,
+    pub image: Option<String>,
+    pub stick: Option<String>,
 }
 
 /// Pagination information
@@ -188,11 +216,11 @@ pub struct Pagination {
 /// Advertisement result
 #[derive(Debug, Deserialize, Clone)]
 pub struct Ad {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
     pub link: String,
-    pub displayed_link: String,
-    pub description: String,
+    pub displayed_link: Option<String>,
+    pub description: Option<String>,
     pub sitelinks: Option<Vec<SiteLink>>,
 }
 
@@ -206,32 +234,32 @@ pub struct SiteLink {
 /// Shopping result
 #[derive(Debug, Deserialize, Clone)]
 pub struct ShoppingResult {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
-    pub link: String,
-    pub product_link: String,
-    pub product_id: String,
-    pub serpapi_product_api: String,
-    pub source: String,
-    pub price: String,
+    pub link: Option<String>,
+    pub product_link: Option<String>,
+    pub product_id: Option<String>,
+    pub serpapi_product_api: Option<String>,
+    pub source: Option<String>,
+    pub price: Option<String>,
     pub extracted_price: Option<f64>,
     pub rating: Option<f64>,
     pub reviews: Option<u32>,
     pub extensions: Option<Vec<String>>,
-    pub thumbnail: String,
+    pub thumbnail: Option<String>,
 }
 
 /// Local results
 #[derive(Debug, Deserialize, Clone)]
 pub struct LocalResults {
-    pub more_locations_link: String,
-    pub places: Vec<LocalPlace>,
+    pub more_locations_link: Option<String>,
+    pub places: Option<Vec<LocalPlace>>,
 }
 
 /// Local place result
 #[derive(Debug, Deserialize, Clone)]
 pub struct LocalPlace {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
     pub place_id: String,
     pub data_id: String,
@@ -266,11 +294,11 @@ pub struct GpsCoordinates {
 /// News result
 #[derive(Debug, Deserialize, Clone)]
 pub struct NewsResult {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
     pub link: String,
-    pub source: String,
-    pub date: String,
+    pub source: Option<String>,
+    pub date: Option<String>,
     pub snippet: Option<String>,
     pub thumbnail: Option<String>,
 }
@@ -278,26 +306,79 @@ pub struct NewsResult {
 /// Video result
 #[derive(Debug, Deserialize, Clone)]
 pub struct VideoResult {
-    pub position: u32,
+    pub position: Option<u32>,
     pub title: String,
     pub link: String,
-    pub displayed_link: String,
-    pub thumbnail: String,
-    pub channel: String,
-    pub duration: String,
-    pub platform: String,
-    pub date: String,
+    pub displayed_link: Option<String>,
+    pub thumbnail: Option<String>,
+    pub channel: Option<String>,
+    pub duration: Option<String>,
+    pub platform: Option<String>,
+    pub date: Option<String>,
 }
 
 /// Inline image
 #[derive(Debug, Deserialize, Clone)]
 pub struct InlineImage {
-    pub position: u32,
-    pub title: String,
-    pub link: String,
-    pub source: String,
-    pub source_logo: String,
-    pub thumbnail: String,
-    pub original: String,
+    pub position: Option<u32>,
+    pub title: Option<String>,
+    pub link: Option<String>,
+    pub source: Option<String>,
+    pub source_name: Option<String>,
+    pub source_logo: Option<String>,
+    pub thumbnail: Option<String>,
+    pub original: Option<String>,
     pub is_product: Option<bool>,
+}
+
+/// Inline video result
+#[derive(Debug, Deserialize, Clone)]
+pub struct InlineVideo {
+    pub position: Option<u32>,
+    pub title: Option<String>,
+    pub link: Option<String>,
+    pub thumbnail: Option<String>,
+    pub channel: Option<String>,
+    pub duration: Option<String>,
+    pub platform: Option<String>,
+    pub date: Option<String>,
+    pub key_moments: Option<Vec<KeyMoment>>,
+}
+
+/// Key moment in video
+#[derive(Debug, Deserialize, Clone)]
+pub struct KeyMoment {
+    pub time: Option<String>,
+    pub title: Option<String>,
+    pub link: Option<String>,
+}
+
+/// Short video result
+#[derive(Debug, Deserialize, Clone)]
+pub struct ShortVideo {
+    pub position: Option<u32>,
+    pub title: Option<String>,
+    pub link: Option<String>,
+    pub thumbnail: Option<String>,
+    pub channel: Option<String>,
+    pub duration: Option<String>,
+    pub platform: Option<String>,
+}
+
+/// Search information
+#[derive(Debug, Deserialize, Clone)]
+pub struct SearchInformation {
+    pub organic_results_state: Option<String>,
+    pub query_displayed: Option<String>,
+    pub time_taken_displayed: Option<f64>,
+    pub total_results: Option<u64>,
+}
+
+/// SerpAPI pagination
+#[derive(Debug, Deserialize, Clone)]
+pub struct SerpapiPagination {
+    pub current: Option<u32>,
+    pub next: Option<String>,
+    pub next_link: Option<String>,
+    pub other_pages: Option<HashMap<String, String>>,
 }
